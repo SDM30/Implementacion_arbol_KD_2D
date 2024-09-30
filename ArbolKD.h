@@ -17,6 +17,9 @@ public:
     bool esVacio();
     bool insertar(Punto val);
     NodoKD *insertarRec(NodoKD* nodo, Punto val, bool& insertado, char dimension);
+    NodoKD *cercano(NodoKD* n1, NodoKD* n2, Punto val);
+    NodoKD *vecinoCercano(NodoKD* raiz, Punto val);
+    void vecinoCercanoRec(NodoKD* nodo, Punto val, char dimension, NodoKD*& mejorNodo, int& mejorDist);
     //Recorridos
     void preOrden();
     void preOrden(NodoKD *nodo);

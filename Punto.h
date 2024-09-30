@@ -12,6 +12,8 @@ struct Punto {
 
     friend std::ostream& operator << (std::ostream &o, const Punto &p);
 
+    int distanciaEuclidiana(Punto val2); // distancia del punto a val2
+
 };
 
 #endif

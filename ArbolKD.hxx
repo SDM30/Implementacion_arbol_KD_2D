@@ -1,5 +1,6 @@
 #include "ArbolKD.h"
 #include <queue>
+#include <limits>
 
 ArbolKD::ArbolKD() {
     this->raiz = NULL;
@@ -66,6 +67,90 @@ NodoKD* ArbolKD::insertarRec(NodoKD* nodo, Punto val, bool& insertado, char dime
     }
 
     return nodo;
+}
+
+NodoKD* ArbolKD::vecinoCercano(NodoKD* raiz, Punto val) {
+    NodoKD* mejorNodo = NULL;
+    int mejorD = std::numeric_limits<int>::max();
+    vecinoCercanoRec(raiz, val, 'x', mejorNodo, mejorD);
+    return mejorNodo;
+}
+
+void ArbolKD::vecinoCercanoRec(NodoKD* nodo, Punto val, char dimension, NodoKD*& mejorNodo, int& mejorDist) {
+    
+    NodoKD* sigRama = NULL;
+    NodoKD* otraRama = NULL;
+
+    if (nodo == NULL) return;
+
+    int distActual = val.distanciaEuclidiana(nodo->obtenerDato());
+    if (distActual < mejorDist) {
+        mejorDist = distActual;
+        mejorNodo = nodo;
+    }
+    
+    //Buscar nodo raiz cercano
+    if (val.x == nodo->obtenerDato().x && val.y == nodo->obtenerDato().y) {
+        std::cout<<"Se encontro un punto igual"<<std::endl;
+        mejorNodo = nodo;
+        return;
+    } else if (dimension == 'x') {
+        if (val.x <= nodo->obtenerDato().x) {
+            sigRama = nodo->obtenerHijoIzq();
+            otraRama = nodo->obtenerHijoDer();
+
+        } else if (val.x > nodo->obtenerDato().x) {
+            
+            sigRama = nodo->obtenerHijoDer();
+            otraRama = nodo->obtenerHijoIzq();
+        }
+
+    } else if (dimension == 'y') {
+        if (val.y <= nodo->obtenerDato().y) {
+            sigRama = nodo->obtenerHijoIzq();
+            otraRama = nodo->obtenerHijoDer();
+
+        } else if (val.y > nodo->obtenerDato().y) {
+            sigRama = nodo->obtenerHijoDer();
+            otraRama = nodo->obtenerHijoIzq();
+        }
+    }
+
+    // Alternar dimensión para la siguiente recursión
+    char nuevaDimension = (dimension == 'x') ? 'y' : 'x';
+
+    vecinoCercanoRec(sigRama, val, nuevaDimension, mejorNodo, mejorDist);
+    NodoKD* nodoVecino = cercano(mejorNodo, nodo, val);
+
+    //Distancia entre la recta y el punto
+    int distEje;
+    if (dimension == 'x') {
+        distEje = abs(val.x - nodo->obtenerDato().x);
+    } else {
+        distEje = abs(val.y - nodo->obtenerDato().y);
+    }
+    
+    if (distEje < distActual) {
+        vecinoCercanoRec(otraRama, val, nuevaDimension, mejorNodo, mejorDist);
+        nodoVecino = cercano(mejorNodo, nodo, val);
+    }
+}
+
+NodoKD *ArbolKD::cercano(NodoKD* n1, NodoKD* n2, Punto val) {
+    
+    if (n2 == NULL) 
+        return n1;
+    if (n1 == NULL) 
+        return n2;
+
+    int distN1 = n1->obtenerDato().distanciaEuclidiana(val);
+    int distN2 = n2->obtenerDato().distanciaEuclidiana(val);
+
+    if (distN1 < distN2) {
+        return n1;
+    } else {
+        return n2;
+    }
 }
 
 void ArbolKD::preOrden() {
@@ -145,3 +230,4 @@ void ArbolKD::nivelOrden() {
         }
     }
 }
+
