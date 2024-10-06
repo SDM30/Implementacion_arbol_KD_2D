@@ -1,7 +1,20 @@
 #include <iostream>
 #include "ArbolKD.h"
 
+void prueba1();
+void pruebaHiperPlano();
+
 int main() {
+    std::cout<<"------------PRUEBA 1------------"<<std::endl;
+    prueba1();
+    std::cout<<std::endl;
+    std::cout<<"------------PRUEBA 2------------"<<std::endl;
+    pruebaHiperPlano();
+    std::cout<<std::endl;
+    return 0;
+}
+
+void prueba1(){
     ArbolKD arbol;
 
     // Crear algunos puntos para insertar
@@ -95,6 +108,31 @@ int main() {
         std::cout << "El vecino más cercano a (" << puntoPrueba7.x << ", " << puntoPrueba7.y << ") es (" 
                   << vecino7->obtenerDato().x << ", " << vecino7->obtenerDato().y << ")" << std::endl;
     }
+}
 
-    return 0;
+void pruebaHiperPlano(){
+    ArbolKD arbol;
+    // Crear algunos puntos para insertar
+    Punto p1 = {5, 4};
+    Punto p2 = {2, 6};
+    Punto p3 = {13, 3};
+    Punto p4 = {3, 1};
+    Punto p5 = {10, 2};
+    Punto p6 = {8, 7};
+
+    // Insertar puntos en el árbol
+    arbol.insertar(p1);
+    arbol.insertar(p2);
+    arbol.insertar(p3);
+    arbol.insertar(p4);
+    arbol.insertar(p5);
+    arbol.insertar(p6);
+
+    Punto prueba = {9, 4};
+    NodoKD* vecino = arbol.vecinoCercano(arbol.obtenerRaiz(), prueba);
+    if (vecino != NULL) {
+        std::cout << "El vecino más cercano a (" << prueba.x << ", " << prueba.y << ") es (" 
+                  << vecino->obtenerDato().x << ", " << vecino->obtenerDato().y << ")" << std::endl;
+    }
+
 }
